@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 
 const defaultLine: lineType = {
 	line: 0,
-	value: 'one + one',
+	value: '(1 + 3) by 3',
 	isValid: true,
 };
 

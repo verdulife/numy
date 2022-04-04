@@ -1,23 +1,34 @@
 <script lang="ts">
-	import { _nums } from '$lib/dictionaries/numbers';
+	import { _op } from '$lib/dictionaries/operators';
+	import { _currency } from '$lib/dictionaries/currency';
+	import { getCurrency } from '$lib/scripts/utils';
 	export let req: string;
 
-	let res: string = req;
-	$: parsed = res;
+	function getRes() {
+		let copy = req;
 
-	$: if (req) {
-		console.log(req);
-
-		_nums.forEach((num) => {
-			const regex = new RegExp(num.t, 'g');
-			res = res.replace(regex, num.n);
+		_op.forEach(({ input, output }) => {
+			const regex = new RegExp(input, 'g');
+			copy = copy.replace(regex, output);
 		});
 
-		parsed = eval(res);
+		/* _currency.forEach((val) => {
+			const regex = new RegExp('in', 'g');
+			copy = copy.replace(regex, output);
+		}); */
+
+		try {
+			return new Function(`return ${copy}`)();
+		} catch (error) {
+			return '--';
+		}
 	}
+
+	let res = getRes();
+	$: if (req) res = getRes();
 </script>
 
-<code>{res}</code>
+<code>{res || '--'}</code>
 
 <style lang="scss">
 	code {
